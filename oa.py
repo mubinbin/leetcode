@@ -144,9 +144,9 @@ solve(2, [1,2,2,2,3,3])
 
 # Aladdin and his Carpet
 def optimalPoint(magicArr, distArr):
-  canFinishArr = [True for i in range(len(magicArr))]
-
+  #canFinishArr = [True for i in range(len(magicArr))]
   for i in range(len(magicArr)):
+    canFinish = True
     totalMagic = 0
     visitedIndexArr = []
 
@@ -155,17 +155,21 @@ def optimalPoint(magicArr, distArr):
       visitedIndexArr.append(j)
       totalMagic = totalMagic + magicArr[j] - distArr[j]
       if totalMagic < 0:
-        canFinishArr[i] = False
+        #canFinishArr[i] = False
+        canFinish = False
         break
       if j == len(magicArr)-1:
         j = 0
       else:
         j += 1
-        
-  print(canFinishArr)
-  return canFinishArr.index(True) if True in canFinishArr else -1
+    
+    if canFinish:
+      return i
+  return -1        
+  #print(canFinishArr)
+  #return canFinishArr.index(True) if True in canFinishArr else -1
       
-optimalPoint([3,2,5,4], [2,3,6,4])
+optimalPoint([2,2,2,5], [4,3,1,3])
 
 # Meandering Array
 def meanderingArray(unsorted):
@@ -298,3 +302,46 @@ print(rearrangeWord("pp"))
 print(rearrangeWord("xy"))
 print(rearrangeWord("hgfe"))
 print(rearrangeWord("caba"))
+
+# shopper's delight
+import bisect
+
+def comb(l1, l2, budgeted) :
+    ch1 = bisect.bisect_right(l1, budgeted - l2[0]) #2
+    ch2 = bisect.bisect_right(l2, budgeted - l1[0]) #3
+
+
+    maxA = 0
+    maxB = 0
+    cl1 = 0
+    cl2 = 0
+
+    if ch2 != 0:
+        cl1 = bisect.bisect_right(l1, budgeted - l2[ch2-1]) #2
+
+    if ch1 != 0:
+        cl2 = bisect.bisect_right(l2, budgeted - l1[ch1-1]) #3
+
+    if ch2 * cl1 != 0:
+        maxA = l1[cl1-1]+l2[ch2-1]
+    if ch1 * cl2 != 0:
+        maxB = l1[ch1-1]+l2[cl2-1]
+
+    comb12 = ch1*cl2 + ch2*cl1 - cl1*cl2
+    return comb12, max(maxA, maxB)
+
+def getNumberOfOptions(priceOfJeans, priceOfShoes, priceOfSkirts, priceOfTops, budgeted):
+    l1 = sorted(priceOfJeans)
+    l2 = sorted(priceOfShoes)
+    l3 = sorted(priceOfSkirts)
+    l4 = sorted(priceOfTops)
+
+    ch12, max12 = comb(l1, l2, budgeted - l3[0] - l4[0])
+    ch34, max34 = comb(l3, l4, budgeted - l1[0] - l2[0])
+
+    cl12, maxl12 = comb(l1, l2, budgeted - max34)
+    cl34, maxl34 = comb(l3, l4, budgeted - max12)
+
+    return ch12*cl34 + ch34*cl12 - cl12*cl34
+
+print(getNumberOfOptions([2,3], [1,2,3], [2,3,4], [1,2], 7))
