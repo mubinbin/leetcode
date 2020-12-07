@@ -251,3 +251,50 @@ def mergeArrays(arr1, arr2):
   return arr1
 
 mergeArrays([1,2,3], [2,5,5])
+
+# Product Defects
+def largestArea(samples):
+  if len(samples) == 0:
+    return 0
+  sizeOfArea =0
+  # dynamic programming method: dp[len(sample)+1][len(sample[0])+1], all cells are 0
+  dp = [[0 for i in range(len(samples)+1)] for j in range(len(samples[0])+1)]
+
+  # dp[row][col] stores sizeOfArea
+  for row in range(1, len(dp), 1):
+    for col in range(1, len(dp[0]), 1):
+      # if sample[row-1][col-1] == 1, dp[row][col] = min(dp[row-1][col-1], dp[row-1][col], dp[row][col-1])+1, meaning dp[row][col] increases 1 only if all surroundings are 1
+      if samples[row-1][col-1] ==1:
+        dp[row][col] = min(dp[row-1][col-1], dp[row-1][col], dp[row][col-1])+1
+      # upadte sizeOfArea will be dp[row][col] or previous sizeOfArea whichever is larger
+        sizeOfArea = max(sizeOfArea, dp[row][col])
+  return sizeOfArea
+
+largestArea([[1,1,1,1,1], [1,1,1,0,0], [1,1,1,0,0], [1,1,1,0,0], [1,1,1,1,1]])
+
+# Perfect Team
+import collections
+def differentTeams(skills):
+  if "p" not in skills or "c" not in skills or "m" not in skills  or "b" not in skills or "z" not in skills:
+    return 0
+
+  teamMap = collections.Counter(skills)
+  return min(teamMap.values())
+print(differentTeams("mppzbmbpzcbmpbmczczcccc"))
+print(differentTeams("pcmpcmbbzz"))
+print(differentTeams("pcmbp"))
+
+# Next Permutation: return the next alphabetically greater string in all permutation of the word, if there is none of it, return "no answer"
+def rearrangeWord(word):
+  word = list(word) # conver string to char array
+  for i in range(len(word)-1, 0, -1):
+    for j in range(i-1, -1, -1):
+      if word[i] > word[j]:
+        word[i], word[j] = word[j], word[i]
+        return "".join(word) # convert char array to string
+  return "No answer"
+
+print(rearrangeWord("pp"))
+print(rearrangeWord("xy"))
+print(rearrangeWord("hgfe"))
+print(rearrangeWord("caba"))
