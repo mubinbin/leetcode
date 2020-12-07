@@ -208,3 +208,46 @@ def triplets(threshold, arr):
 
 triplets(7, [1,2,3,4,5])
 
+# Purchasing Supplies
+def maximumContainers(scenarios):
+  ansArr =[]
+  for scenario in scenarios:
+    totalContainers = 0
+    scenarioList = scenario.split(" ")
+    buget = int(scenarioList[0])
+    cost = int(scenarioList[1])
+    m = int(scenarioList[2])
+
+    containersFromBuy = buget // cost
+    totalContainers += containersFromBuy
+
+    containersFromReturn = totalContainers
+    subTotalContainers = containersFromReturn
+    while subTotalContainers >= m:
+      containersFromReturn = subTotalContainers // m 
+      totalContainers += containersFromReturn
+      subTotalContainers = subTotalContainers // m + subTotalContainers % m
+    
+    ansArr.append(totalContainers)
+
+  for containers in ansArr:
+    print(containers)
+
+maximumContainers(["10 2 5", "12 4 4", "6 2 2"])
+maximumContainers(["8 4 2", "7 2 3"])
+
+# merge 2 arrays
+def mergeArrays(arr1, arr2):
+  i = j = 0
+  while i < len(arr1) and j < len(arr2):
+    if arr2[j] <= arr1[i]:
+      arr1.insert(i, arr2[j])
+      j +=1
+    else:
+      if i == len(arr1)-1:
+        arr1.append(arr2[j])
+        j +=1
+      i +=1
+  return arr1
+
+mergeArrays([1,2,3], [2,5,5])
